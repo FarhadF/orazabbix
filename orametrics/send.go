@@ -5,10 +5,10 @@ import (
 	"time"
 )
 
-func send(zabbixData map[string]string, zabbixHost string, zabbixPort int) {
+func send(zabbixData map[string]string, zabbixHost string, zabbixPort int, hostName string) {
 	var metrics []*Metric
 	for k, v := range zabbixData {
-		metrics = append(metrics, NewMetric("server1", k, v, time.Now().Unix()))
+		metrics = append(metrics, NewMetric(hostName, k, v, time.Now().Unix()))
 		//metrics = append(metrics, NewMetric("server1", "status", "OK"))
 	}
 	// Create instance of Packet class

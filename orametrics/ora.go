@@ -37,6 +37,6 @@ func Init(connectionString string, zabbixHost string, zabbixPort int, hostName s
 		}
 	}
 	fmt.Println(zabbixData)
-	send(zabbixData, zabbixHost, zabbixPort)
+	send(zabbixData, zabbixHost, zabbixPort, hostName)
 
 }
