@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <zabbix_export>
-    <version>3.0</version>
-    <date>2017-05-19T07:49:58Z</date>
+    <version>3.2</version>
+    <date>2017-06-27T09:40:04Z</date>
     <groups>
         <group>
             <name>Templates</name>
@@ -9,8 +9,8 @@
     </groups>
     <templates>
         <template>
-            <template>Template Oracle (FarhadF)</template>
-            <name>Template Oracle (FarhadF)</name>
+            <template>Template Oracle - FarhadF</template>
+            <name>Template Oracle - FarhadF</name>
             <description/>
             <groups>
                 <group>
@@ -2045,6 +2045,49 @@
                     <logtimefmt/>
                 </item>
                 <item>
+                    <name>Waits Logsync</name>
+                    <type>2</type>
+                    <snmp_community/>
+                    <multiplier>0</multiplier>
+                    <snmp_oid/>
+                    <key>waits_logsync</key>
+                    <delay>0</delay>
+                    <history>90</history>
+                    <trends>365</trends>
+                    <status>0</status>
+                    <value_type>3</value_type>
+                    <allowed_hosts/>
+                    <units>ms waits/s</units>
+                    <delta>1</delta>
+                    <snmpv3_contextname/>
+                    <snmpv3_securityname/>
+                    <snmpv3_securitylevel>0</snmpv3_securitylevel>
+                    <snmpv3_authprotocol>0</snmpv3_authprotocol>
+                    <snmpv3_authpassphrase/>
+                    <snmpv3_privprotocol>0</snmpv3_privprotocol>
+                    <snmpv3_privpassphrase/>
+                    <formula>1</formula>
+                    <delay_flex/>
+                    <params/>
+                    <ipmi_sensor/>
+                    <data_type>0</data_type>
+                    <authtype>0</authtype>
+                    <username/>
+                    <password/>
+                    <publickey/>
+                    <privatekey/>
+                    <port/>
+                    <description/>
+                    <inventory_link>0</inventory_link>
+                    <applications>
+                        <application>
+                            <name>Oracle</name>
+                        </application>
+                    </applications>
+                    <valuemap/>
+                    <logtimefmt/>
+                </item>
+                <item>
                     <name>Waits Logwrite</name>
                     <type>2</type>
                     <snmp_community/>
@@ -2342,30 +2385,43 @@
                     </item_prototypes>
                     <trigger_prototypes>
                         <trigger_prototype>
-                            <expression>{Template Oracle:ts_usage_pct[{#TS}].last(0)}&gt;95</expression>
+                            <expression>{Template Oracle - FarhadF:ts_usage_pct[{#TS}].last(0)}&gt;95</expression>
+                            <recovery_mode>0</recovery_mode>
+                            <recovery_expression/>
                             <name>Tablespace {#TS} free space is less than 5%</name>
+                            <correlation_mode>0</correlation_mode>
+                            <correlation_tag/>
                             <url/>
                             <status>0</status>
                             <priority>4</priority>
                             <description/>
                             <type>0</type>
+                            <manual_close>0</manual_close>
                             <dependencies/>
+                            <tags/>
                         </trigger_prototype>
                         <trigger_prototype>
-                            <expression>{Template Oracle:ts_usage_pct[{#TS}].last(0)}&gt;90</expression>
+                            <expression>{Template Oracle - FarhadF:ts_usage_pct[{#TS}].last(0)}&gt;90</expression>
+                            <recovery_mode>0</recovery_mode>
+                            <recovery_expression/>
                             <name>Tablespace {#TS} free space is less than 10%</name>
+                            <correlation_mode>0</correlation_mode>
+                            <correlation_tag/>
                             <url/>
                             <status>0</status>
                             <priority>2</priority>
                             <description/>
                             <type>0</type>
+                            <manual_close>0</manual_close>
                             <dependencies/>
+                            <tags/>
                         </trigger_prototype>
                     </trigger_prototypes>
                     <graph_prototypes/>
                     <host_prototypes/>
                 </discovery_rule>
             </discovery_rules>
+            <httptests/>
             <macros/>
             <templates/>
             <screens>
@@ -2391,7 +2447,7 @@
                             <sort_triggers>0</sort_triggers>
                             <resource>
                                 <name>SGA Memory Usage</name>
-                                <host>Template Oracle</host>
+                                <host>Template Oracle - FarhadF</host>
                             </resource>
                             <max_columns>3</max_columns>
                             <application/>
@@ -2413,7 +2469,7 @@
                             <sort_triggers>0</sort_triggers>
                             <resource>
                                 <name>Shared Pool</name>
-                                <host>Template Oracle</host>
+                                <host>Template Oracle - FarhadF</host>
                             </resource>
                             <max_columns>3</max_columns>
                             <application/>
@@ -2435,7 +2491,7 @@
                             <sort_triggers>0</sort_triggers>
                             <resource>
                                 <name>Physical I/O</name>
-                                <host>Template Oracle</host>
+                                <host>Template Oracle - FarhadF</host>
                             </resource>
                             <max_columns>3</max_columns>
                             <application/>
@@ -2457,7 +2513,7 @@
                             <sort_triggers>0</sort_triggers>
                             <resource>
                                 <name>Archivelog</name>
-                                <host>Template Oracle</host>
+                                <host>Template Oracle - FarhadF</host>
                             </resource>
                             <max_columns>3</max_columns>
                             <application/>
@@ -2479,7 +2535,7 @@
                             <sort_triggers>0</sort_triggers>
                             <resource>
                                 <name>Events Waits</name>
-                                <host>Template Oracle</host>
+                                <host>Template Oracle - FarhadF</host>
                             </resource>
                             <max_columns>3</max_columns>
                             <application/>
@@ -2501,7 +2557,7 @@
                             <sort_triggers>0</sort_triggers>
                             <resource>
                                 <name>Sessions</name>
-                                <host>Template Oracle</host>
+                                <host>Template Oracle - FarhadF</host>
                             </resource>
                             <max_columns>3</max_columns>
                             <application/>
@@ -2510,247 +2566,135 @@
                 </screen>
             </screens>
         </template>
-        <template>
-            <template>Template Oracle Standby</template>
-            <name>Template Oracle Standby</name>
-            <description/>
-            <groups>
-                <group>
-                    <name>Templates</name>
-                </group>
-            </groups>
-            <applications>
-                <application>
-                    <name>Oracle</name>
-                </application>
-            </applications>
-            <items>
-                <item>
-                    <name>Standby archived log sequence</name>
-                    <type>2</type>
-                    <snmp_community/>
-                    <multiplier>0</multiplier>
-                    <snmp_oid/>
-                    <key>archivelog_applied</key>
-                    <delay>0</delay>
-                    <history>90</history>
-                    <trends>365</trends>
-                    <status>0</status>
-                    <value_type>3</value_type>
-                    <allowed_hosts/>
-                    <units/>
-                    <delta>0</delta>
-                    <snmpv3_contextname/>
-                    <snmpv3_securityname/>
-                    <snmpv3_securitylevel>0</snmpv3_securitylevel>
-                    <snmpv3_authprotocol>0</snmpv3_authprotocol>
-                    <snmpv3_authpassphrase/>
-                    <snmpv3_privprotocol>0</snmpv3_privprotocol>
-                    <snmpv3_privpassphrase/>
-                    <formula>1</formula>
-                    <delay_flex/>
-                    <params/>
-                    <ipmi_sensor/>
-                    <data_type>0</data_type>
-                    <authtype>0</authtype>
-                    <username/>
-                    <password/>
-                    <publickey/>
-                    <privatekey/>
-                    <port/>
-                    <description/>
-                    <inventory_link>0</inventory_link>
-                    <applications>
-                        <application>
-                            <name>Oracle</name>
-                        </application>
-                    </applications>
-                    <valuemap/>
-                    <logtimefmt/>
-                </item>
-                <item>
-                    <name>Archivelog gap</name>
-                    <type>15</type>
-                    <snmp_community/>
-                    <multiplier>0</multiplier>
-                    <snmp_oid/>
-                    <key>archivelog_gap</key>
-                    <delay>30</delay>
-                    <history>90</history>
-                    <trends>365</trends>
-                    <status>0</status>
-                    <value_type>3</value_type>
-                    <allowed_hosts/>
-                    <units/>
-                    <delta>0</delta>
-                    <snmpv3_contextname/>
-                    <snmpv3_securityname/>
-                    <snmpv3_securitylevel>0</snmpv3_securitylevel>
-                    <snmpv3_authprotocol>0</snmpv3_authprotocol>
-                    <snmpv3_authpassphrase/>
-                    <snmpv3_privprotocol>0</snmpv3_privprotocol>
-                    <snmpv3_privpassphrase/>
-                    <formula>1</formula>
-                    <delay_flex/>
-                    <params>last(&quot;archivelog_seq&quot;)-last(&quot;archivelog_applied&quot;)</params>
-                    <ipmi_sensor/>
-                    <data_type>0</data_type>
-                    <authtype>0</authtype>
-                    <username/>
-                    <password/>
-                    <publickey/>
-                    <privatekey/>
-                    <port/>
-                    <description/>
-                    <inventory_link>0</inventory_link>
-                    <applications>
-                        <application>
-                            <name>Oracle</name>
-                        </application>
-                    </applications>
-                    <valuemap/>
-                    <logtimefmt/>
-                </item>
-                <item>
-                    <name>Primary archived log sequence</name>
-                    <type>2</type>
-                    <snmp_community/>
-                    <multiplier>0</multiplier>
-                    <snmp_oid/>
-                    <key>archivelog_seq</key>
-                    <delay>0</delay>
-                    <history>90</history>
-                    <trends>365</trends>
-                    <status>0</status>
-                    <value_type>3</value_type>
-                    <allowed_hosts/>
-                    <units/>
-                    <delta>0</delta>
-                    <snmpv3_contextname/>
-                    <snmpv3_securityname/>
-                    <snmpv3_securitylevel>0</snmpv3_securitylevel>
-                    <snmpv3_authprotocol>0</snmpv3_authprotocol>
-                    <snmpv3_authpassphrase/>
-                    <snmpv3_privprotocol>0</snmpv3_privprotocol>
-                    <snmpv3_privpassphrase/>
-                    <formula>1</formula>
-                    <delay_flex/>
-                    <params/>
-                    <ipmi_sensor/>
-                    <data_type>0</data_type>
-                    <authtype>0</authtype>
-                    <username/>
-                    <password/>
-                    <publickey/>
-                    <privatekey/>
-                    <port/>
-                    <description/>
-                    <inventory_link>0</inventory_link>
-                    <applications>
-                        <application>
-                            <name>Oracle</name>
-                        </application>
-                    </applications>
-                    <valuemap/>
-                    <logtimefmt/>
-                </item>
-            </items>
-            <discovery_rules/>
-            <macros/>
-            <templates/>
-            <screens/>
-        </template>
     </templates>
     <triggers>
         <trigger>
-            <expression>({TRIGGER.VALUE}=0 and {Template Oracle Standby:archivelog_gap.last(0)}&gt;10) or ({TRIGGER.VALUE}=1 and {Template Oracle Standby:archivelog_gap.last(0)}&gt;7)</expression>
-            <name>Archivelog gap</name>
-            <url/>
-            <status>0</status>
-            <priority>3</priority>
-            <description/>
-            <type>0</type>
-            <dependencies/>
-        </trigger>
-        <trigger>
-            <expression>{Template Oracle:archivelog_switch.last(0)}&gt;20</expression>
+            <expression>{Template Oracle - FarhadF:archivelog_switch.last(0)}&gt;20</expression>
+            <recovery_mode>0</recovery_mode>
+            <recovery_expression/>
             <name>Archivelog generation is too fast</name>
+            <correlation_mode>0</correlation_mode>
+            <correlation_tag/>
             <url/>
             <status>0</status>
             <priority>2</priority>
             <description>High archivelog generation</description>
             <type>0</type>
+            <manual_close>0</manual_close>
             <dependencies/>
+            <tags/>
         </trigger>
         <trigger>
-            <expression>{Template Oracle:blocking_sessions.avg(#2)}&gt;0</expression>
+            <expression>{Template Oracle - FarhadF:blocking_sessions.avg(#2)}&gt;0</expression>
+            <recovery_mode>0</recovery_mode>
+            <recovery_expression/>
             <name>Blocking sessions</name>
+            <correlation_mode>0</correlation_mode>
+            <correlation_tag/>
             <url/>
             <status>0</status>
             <priority>4</priority>
             <description/>
             <type>0</type>
+            <manual_close>0</manual_close>
             <dependencies/>
+            <tags/>
         </trigger>
         <trigger>
-            <expression>{Template Oracle:uptime.last(0)}&lt;300</expression>
+            <expression>{Template Oracle - FarhadF:uptime.last(0)}&lt;300</expression>
+            <recovery_mode>0</recovery_mode>
+            <recovery_expression/>
             <name>DB has just been restarted</name>
+            <correlation_mode>0</correlation_mode>
+            <correlation_tag/>
             <url/>
             <status>0</status>
             <priority>1</priority>
             <description/>
             <type>0</type>
+            <manual_close>0</manual_close>
             <dependencies/>
+            <tags/>
         </trigger>
         <trigger>
-            <expression>{Template Oracle:dbversion.change()}=1</expression>
+            <expression>{Template Oracle - FarhadF:dbversion.change()}=1</expression>
+            <recovery_mode>0</recovery_mode>
+            <recovery_expression/>
             <name>DB version has been changed</name>
+            <correlation_mode>0</correlation_mode>
+            <correlation_tag/>
             <url/>
             <status>0</status>
             <priority>1</priority>
             <description/>
             <type>0</type>
+            <manual_close>0</manual_close>
             <dependencies/>
+            <tags/>
         </trigger>
         <trigger>
-            <expression>{Template Oracle:hitratio_table_proc.avg(60)}&lt;50 or {Template Oracle:hitratio_trigger.avg(60)}&lt;50 or {Template Oracle:hitratio_sqlarea.avg(60)}&lt;50 or {Template Oracle:hitratio_body.avg(60)}&lt;50</expression>
+            <expression>{Template Oracle - FarhadF:hitratio_table_proc.avg(60)}&lt;50 or {Template Oracle - FarhadF:hitratio_trigger.avg(60)}&lt;50 or {Template Oracle - FarhadF:hitratio_sqlarea.avg(60)}&lt;50 or {Template Oracle - FarhadF:hitratio_body.avg(60)}&lt;50</expression>
+            <recovery_mode>0</recovery_mode>
+            <recovery_expression/>
             <name>Hit Ratio is less than 50%</name>
+            <correlation_mode>0</correlation_mode>
+            <correlation_tag/>
             <url/>
             <status>0</status>
             <priority>2</priority>
             <description/>
             <type>0</type>
+            <manual_close>0</manual_close>
             <dependencies/>
+            <tags/>
         </trigger>
         <trigger>
-            <expression>{Template Oracle:alive.last(0)}=0</expression>
+            <expression>{Template Oracle - FarhadF:alive.last(0)}=0</expression>
+            <recovery_mode>0</recovery_mode>
+            <recovery_expression/>
             <name>Instance is down or not accessible</name>
+            <correlation_mode>0</correlation_mode>
+            <correlation_tag/>
             <url/>
             <status>0</status>
             <priority>5</priority>
             <description/>
             <type>0</type>
+            <manual_close>0</manual_close>
             <dependencies/>
+            <tags/>
         </trigger>
         <trigger>
-            <expression>{Template Oracle:alive.nodata(300)}=1</expression>
+            <expression>{Template Oracle - FarhadF:alive.nodata(300)}=1</expression>
+            <recovery_mode>0</recovery_mode>
+            <recovery_expression/>
             <name>No data received for 5 minutes</name>
+            <correlation_mode>0</correlation_mode>
+            <correlation_tag/>
             <url/>
             <status>0</status>
             <priority>3</priority>
             <description/>
             <type>0</type>
+            <manual_close>0</manual_close>
             <dependencies/>
+            <tags/>
         </trigger>
         <trigger>
-            <expression>({Template Oracle:pga.last(0)}*100/{Template Oracle:pga_aggregate_target.last(0)})&gt;98</expression>
+            <expression>({Template Oracle - FarhadF:pga.last(0)}*100/{Template Oracle - FarhadF:pga_aggregate_target.last(0)})&gt;98</expression>
+            <recovery_mode>0</recovery_mode>
+            <recovery_expression/>
             <name>PGA almost fully commited</name>
+            <correlation_mode>0</correlation_mode>
+            <correlation_tag/>
             <url/>
             <status>0</status>
             <priority>2</priority>
             <description/>
             <type>0</type>
+            <manual_close>0</manual_close>
             <dependencies/>
+            <tags/>
         </trigger>
     </triggers>
     <graphs>
@@ -2780,7 +2724,7 @@
                     <calc_fnc>2</calc_fnc>
                     <type>0</type>
                     <item>
-                        <host>Template Oracle</host>
+                        <host>Template Oracle - FarhadF</host>
                         <key>archivelog_switch</key>
                     </item>
                 </graph_item>
@@ -2812,7 +2756,7 @@
                     <calc_fnc>2</calc_fnc>
                     <type>0</type>
                     <item>
-                        <host>Template Oracle</host>
+                        <host>Template Oracle - FarhadF</host>
                         <key>waits_file_io</key>
                     </item>
                 </graph_item>
@@ -2824,7 +2768,7 @@
                     <calc_fnc>2</calc_fnc>
                     <type>0</type>
                     <item>
-                        <host>Template Oracle</host>
+                        <host>Template Oracle - FarhadF</host>
                         <key>waits_singleblock_read</key>
                     </item>
                 </graph_item>
@@ -2836,7 +2780,7 @@
                     <calc_fnc>2</calc_fnc>
                     <type>0</type>
                     <item>
-                        <host>Template Oracle</host>
+                        <host>Template Oracle - FarhadF</host>
                         <key>waits_multiblock_read</key>
                     </item>
                 </graph_item>
@@ -2848,7 +2792,7 @@
                     <calc_fnc>2</calc_fnc>
                     <type>0</type>
                     <item>
-                        <host>Template Oracle</host>
+                        <host>Template Oracle - FarhadF</host>
                         <key>waits_directpath_read</key>
                     </item>
                 </graph_item>
@@ -2860,7 +2804,7 @@
                     <calc_fnc>2</calc_fnc>
                     <type>0</type>
                     <item>
-                        <host>Template Oracle</host>
+                        <host>Template Oracle - FarhadF</host>
                         <key>waits_sqlnet</key>
                     </item>
                 </graph_item>
@@ -2872,7 +2816,7 @@
                     <calc_fnc>2</calc_fnc>
                     <type>0</type>
                     <item>
-                        <host>Template Oracle</host>
+                        <host>Template Oracle - FarhadF</host>
                         <key>waits_controlfileio</key>
                     </item>
                 </graph_item>
@@ -2884,7 +2828,7 @@
                     <calc_fnc>2</calc_fnc>
                     <type>0</type>
                     <item>
-                        <host>Template Oracle</host>
+                        <host>Template Oracle - FarhadF</host>
                         <key>waits_logwrite</key>
                     </item>
                 </graph_item>
@@ -2916,7 +2860,7 @@
                     <calc_fnc>2</calc_fnc>
                     <type>0</type>
                     <item>
-                        <host>Template Oracle</host>
+                        <host>Template Oracle - FarhadF</host>
                         <key>hitratio_table_proc</key>
                     </item>
                 </graph_item>
@@ -2928,7 +2872,7 @@
                     <calc_fnc>2</calc_fnc>
                     <type>0</type>
                     <item>
-                        <host>Template Oracle</host>
+                        <host>Template Oracle - FarhadF</host>
                         <key>hitratio_body</key>
                     </item>
                 </graph_item>
@@ -2940,7 +2884,7 @@
                     <calc_fnc>2</calc_fnc>
                     <type>0</type>
                     <item>
-                        <host>Template Oracle</host>
+                        <host>Template Oracle - FarhadF</host>
                         <key>hitratio_sqlarea</key>
                     </item>
                 </graph_item>
@@ -2952,7 +2896,7 @@
                     <calc_fnc>2</calc_fnc>
                     <type>0</type>
                     <item>
-                        <host>Template Oracle</host>
+                        <host>Template Oracle - FarhadF</host>
                         <key>hitratio_trigger</key>
                     </item>
                 </graph_item>
@@ -2984,7 +2928,7 @@
                     <calc_fnc>2</calc_fnc>
                     <type>0</type>
                     <item>
-                        <host>Template Oracle</host>
+                        <host>Template Oracle - FarhadF</host>
                         <key>pga</key>
                     </item>
                 </graph_item>
@@ -3016,7 +2960,7 @@
                     <calc_fnc>7</calc_fnc>
                     <type>0</type>
                     <item>
-                        <host>Template Oracle</host>
+                        <host>Template Oracle - FarhadF</host>
                         <key>phio_redo_writes</key>
                     </item>
                 </graph_item>
@@ -3028,7 +2972,7 @@
                     <calc_fnc>7</calc_fnc>
                     <type>0</type>
                     <item>
-                        <host>Template Oracle</host>
+                        <host>Template Oracle - FarhadF</host>
                         <key>phio_datafile_reads</key>
                     </item>
                 </graph_item>
@@ -3040,7 +2984,7 @@
                     <calc_fnc>7</calc_fnc>
                     <type>0</type>
                     <item>
-                        <host>Template Oracle</host>
+                        <host>Template Oracle - FarhadF</host>
                         <key>phio_datafile_writes</key>
                     </item>
                 </graph_item>
@@ -3072,7 +3016,7 @@
                     <calc_fnc>2</calc_fnc>
                     <type>0</type>
                     <item>
-                        <host>Template Oracle</host>
+                        <host>Template Oracle - FarhadF</host>
                         <key>pinhitratio_table_proc</key>
                     </item>
                 </graph_item>
@@ -3084,7 +3028,7 @@
                     <calc_fnc>2</calc_fnc>
                     <type>0</type>
                     <item>
-                        <host>Template Oracle</host>
+                        <host>Template Oracle - FarhadF</host>
                         <key>pinhitratio_body</key>
                     </item>
                 </graph_item>
@@ -3096,7 +3040,7 @@
                     <calc_fnc>2</calc_fnc>
                     <type>0</type>
                     <item>
-                        <host>Template Oracle</host>
+                        <host>Template Oracle - FarhadF</host>
                         <key>pinhitratio_sqlarea</key>
                     </item>
                 </graph_item>
@@ -3108,7 +3052,7 @@
                     <calc_fnc>2</calc_fnc>
                     <type>0</type>
                     <item>
-                        <host>Template Oracle</host>
+                        <host>Template Oracle - FarhadF</host>
                         <key>pinhitratio_trigger</key>
                     </item>
                 </graph_item>
@@ -3140,7 +3084,7 @@
                     <calc_fnc>2</calc_fnc>
                     <type>0</type>
                     <item>
-                        <host>Template Oracle</host>
+                        <host>Template Oracle - FarhadF</host>
                         <key>session</key>
                     </item>
                 </graph_item>
@@ -3152,7 +3096,7 @@
                     <calc_fnc>2</calc_fnc>
                     <type>0</type>
                     <item>
-                        <host>Template Oracle</host>
+                        <host>Template Oracle - FarhadF</host>
                         <key>procnum</key>
                     </item>
                 </graph_item>
@@ -3184,7 +3128,7 @@
                     <calc_fnc>2</calc_fnc>
                     <type>0</type>
                     <item>
-                        <host>Template Oracle</host>
+                        <host>Template Oracle - FarhadF</host>
                         <key>session_inactive</key>
                     </item>
                 </graph_item>
@@ -3196,7 +3140,7 @@
                     <calc_fnc>2</calc_fnc>
                     <type>0</type>
                     <item>
-                        <host>Template Oracle</host>
+                        <host>Template Oracle - FarhadF</host>
                         <key>session_system</key>
                     </item>
                 </graph_item>
@@ -3208,7 +3152,7 @@
                     <calc_fnc>2</calc_fnc>
                     <type>0</type>
                     <item>
-                        <host>Template Oracle</host>
+                        <host>Template Oracle - FarhadF</host>
                         <key>session_active</key>
                     </item>
                 </graph_item>
@@ -3240,7 +3184,7 @@
                     <calc_fnc>2</calc_fnc>
                     <type>0</type>
                     <item>
-                        <host>Template Oracle</host>
+                        <host>Template Oracle - FarhadF</host>
                         <key>sga_buffer_cache</key>
                     </item>
                 </graph_item>
@@ -3252,7 +3196,7 @@
                     <calc_fnc>2</calc_fnc>
                     <type>0</type>
                     <item>
-                        <host>Template Oracle</host>
+                        <host>Template Oracle - FarhadF</host>
                         <key>sga_fixed</key>
                     </item>
                 </graph_item>
@@ -3264,7 +3208,7 @@
                     <calc_fnc>2</calc_fnc>
                     <type>0</type>
                     <item>
-                        <host>Template Oracle</host>
+                        <host>Template Oracle - FarhadF</host>
                         <key>sga_java_pool</key>
                     </item>
                 </graph_item>
@@ -3276,7 +3220,7 @@
                     <calc_fnc>2</calc_fnc>
                     <type>0</type>
                     <item>
-                        <host>Template Oracle</host>
+                        <host>Template Oracle - FarhadF</host>
                         <key>sga_large_pool</key>
                     </item>
                 </graph_item>
@@ -3288,7 +3232,7 @@
                     <calc_fnc>2</calc_fnc>
                     <type>0</type>
                     <item>
-                        <host>Template Oracle</host>
+                        <host>Template Oracle - FarhadF</host>
                         <key>sga_log_buffer</key>
                     </item>
                 </graph_item>
@@ -3300,7 +3244,7 @@
                     <calc_fnc>2</calc_fnc>
                     <type>0</type>
                     <item>
-                        <host>Template Oracle</host>
+                        <host>Template Oracle - FarhadF</host>
                         <key>sga_shared_pool</key>
                     </item>
                 </graph_item>
@@ -3332,7 +3276,7 @@
                     <calc_fnc>2</calc_fnc>
                     <type>0</type>
                     <item>
-                        <host>Template Oracle</host>
+                        <host>Template Oracle - FarhadF</host>
                         <key>pool_dict_cache</key>
                     </item>
                 </graph_item>
@@ -3344,7 +3288,7 @@
                     <calc_fnc>2</calc_fnc>
                     <type>0</type>
                     <item>
-                        <host>Template Oracle</host>
+                        <host>Template Oracle - FarhadF</host>
                         <key>pool_free_mem</key>
                     </item>
                 </graph_item>
@@ -3356,7 +3300,7 @@
                     <calc_fnc>2</calc_fnc>
                     <type>0</type>
                     <item>
-                        <host>Template Oracle</host>
+                        <host>Template Oracle - FarhadF</host>
                         <key>pool_lib_cache</key>
                     </item>
                 </graph_item>
@@ -3368,7 +3312,7 @@
                     <calc_fnc>2</calc_fnc>
                     <type>0</type>
                     <item>
-                        <host>Template Oracle</host>
+                        <host>Template Oracle - FarhadF</host>
                         <key>pool_misc</key>
                     </item>
                 </graph_item>
@@ -3380,7 +3324,7 @@
                     <calc_fnc>2</calc_fnc>
                     <type>0</type>
                     <item>
-                        <host>Template Oracle</host>
+                        <host>Template Oracle - FarhadF</host>
                         <key>pool_sql_area</key>
                     </item>
                 </graph_item>
