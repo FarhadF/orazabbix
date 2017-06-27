@@ -5,7 +5,7 @@ var queries = map[string]string{
 	"archivelog_switch":    "select count(*) from gv$log_history where first_time >= (sysdate - 1 / 24)",
 	"uptime":               "select to_char ( (sysdate - startup_time) *24 , 'FM99999999999999990') from gv$instance",
 	"dbblockgets":          "select sum (value) from gv$sysstat where name = 'db block gets'",
-	"dblockchanges":        "select sum (value) from gv$sysstat where name = 'db block changes'",
+	"dbblockchanges":       "select sum (value) from gv$sysstat where name = 'db block changes'",
 	"dbconsistentgets":     "select sum (value) from gv$sysstat where name = 'consistent gets'",
 	"dbphysicalreads":      "select sum (value) from gv$sysstat where name = 'physical reads'",
 	"dbhitratio":           "select ( sum (case name when 'consistent gets' then value else 0 end) + sum (case name when 'db block gets' then value else 0 end) - sum (case name when 'physical reads' then value else 0 end)) / ( sum (case name when 'consistent gets' then value else 0 end) + sum (case name when 'db block gets' then value else 0 end)) * 100 from gv$sysstat",
@@ -33,7 +33,7 @@ var queries = map[string]string{
 	"pool_misc":              "select sum (bytes) from gv$sgastat where pool = 'shared pool' and name not in ('library cache', 'dictionary cache', 'free memory', 'sql area')",
 	"maxprocs":               "select value from gv$parameter where name = 'processes'",
 	"procnum":                "select count (*) from gv$process",
-	"maxsessions":            "select value from gv$parameter where name = 'sessions'",
+	"maxsession":             "select value from gv$parameter where name = 'sessions'",
 	"session":                "select count (*) from gv$session",
 	"session_system":         "select count (*) from gv$session where type = 'BACKGROUND'",
 	"session_active":         "select count (*) from gv$session where type != 'BACKGROUND' and status = 'ACTIVE'",
@@ -56,111 +56,111 @@ var queries = map[string]string{
 	//blocking_sessions maybe empty, check and insert zero instead
 	"blocking_sessions": `select count(*) from (select rootid from (select level lvl, connect_by_root (inst_id || '.' || sid) rootid, seconds_in_wait from gv$session start with blocking_session is null connect by nocycle prior inst_id = blocking_instance and prior sid = blocking_session) where lvl > 1 group by rootid having sum(seconds_in_wait) > 300)`,
 	"blocking_sessions_full": `select    lpad(' ', (level - 1) * 4)
-           || 'INST_ID         :  '
-           || inst_id
-           || chr(10)
-           || lpad(' ', (level - 1) * 4)
-           || 'SERVICE_NAME    :  '
-           || service_name
-           || chr(10)
-           || lpad(' ', (level - 1) * 4)
-           || 'SID,SERIAL      :  '
-           || sid
-           || ','
-           || serial#
-           || chr(10)
-           || lpad(' ', (level - 1) * 4)
-           || 'USERNAME        :  '
-           || username
-           || chr(10)
-           || lpad(' ', (level - 1) * 4)
-           || 'OSUSER          :  '
-           || osuser
-           || chr(10)
-           || lpad(' ', (level - 1) * 4)
-           || 'MACHINE         :  '
-           || machine
-           || chr(10)
-           || lpad(' ', (level - 1) * 4)
-           || 'PROGRAM         :  '
-           || program
-           || chr(10)
-           || lpad(' ', (level - 1) * 4)
-           || 'MODULE          :  '
-           || module
-           || chr(10)
-           || lpad(' ', (level - 1) * 4)
-           || 'SQL_ID          :  '
-           || sql_id
-           || chr(10)
-           || lpad(' ', (level - 1) * 4)
-           || 'EVENT           :  '
-           || event
-           || chr(10)
-           || lpad(' ', (level - 1) * 4)
-           || 'SECONDS_IN_WAIT :  '
-           || seconds_in_wait
-           || chr(10)
-           || lpad(' ', (level - 1) * 4)
-           || 'STATE           :  '
-           || state
-           || chr(10)
-           || lpad(' ', (level - 1) * 4)
-           || 'STATUS          :  '
-           || status
-           || chr(10)
-           || lpad(' ', (level - 1) * 4)
-           || '========================='
-           || chr(10)
-              blocking_sess_info
-      from (
-                  select inst_id || '.' || sid id
-                       , case
-                            when blocking_instance is not null
-                            then
-                               blocking_instance || '.' || blocking_session
-                         end
-                            parent_id
-                       , inst_id
-                       , service_name
-                       , sid
-                       , serial#
-                       , username
-                       , osuser
-                       , machine
-                       , program
-                       , module
-                       , sql_id
-                       , event
-                       , seconds_in_wait
-                       , state
-                       , status
-                       , level lvl
-                       , connect_by_isleaf isleaf
-                       , connect_by_root (inst_id || '.' || sid) rootid
-                    from gv$session
-              start with blocking_session is null
-              connect by nocycle prior inst_id = blocking_instance
-                             and prior sid = blocking_session
-           )
-     where lvl || isleaf <> '11'
-       and rootid in
-              (
-                   select rootid
-                     from (
-                                 select level lvl
-                                      , connect_by_root (inst_id || '.' || sid) rootid
-                                      , seconds_in_wait
-                                   from gv$session
-                             start with blocking_session is null
-                             connect by nocycle prior inst_id = blocking_instance
-                                            and prior sid = blocking_session
-                          )
-                    where lvl > 1
-                 group by rootid
-                   having sum(seconds_in_wait) > 300
-              )
-connect by nocycle prior id = parent_id
-start with parent_id is null`,
+		           || 'INST_ID         :  '
+		           || inst_id
+		           || chr(10)
+		           || lpad(' ', (level - 1) * 4)
+		           || 'SERVICE_NAME    :  '
+		           || service_name
+		           || chr(10)
+		           || lpad(' ', (level - 1) * 4)
+		           || 'SID,SERIAL      :  '
+		           || sid
+		           || ','
+		           || serial#
+		           || chr(10)
+		           || lpad(' ', (level - 1) * 4)
+		           || 'USERNAME        :  '
+		           || username
+		           || chr(10)
+		           || lpad(' ', (level - 1) * 4)
+		           || 'OSUSER          :  '
+		           || osuser
+		           || chr(10)
+		           || lpad(' ', (level - 1) * 4)
+		           || 'MACHINE         :  '
+		           || machine
+		           || chr(10)
+		           || lpad(' ', (level - 1) * 4)
+		           || 'PROGRAM         :  '
+		           || program
+		           || chr(10)
+		           || lpad(' ', (level - 1) * 4)
+		           || 'MODULE          :  '
+		           || module
+		           || chr(10)
+		           || lpad(' ', (level - 1) * 4)
+		           || 'SQL_ID          :  '
+		           || sql_id
+		           || chr(10)
+		           || lpad(' ', (level - 1) * 4)
+		           || 'EVENT           :  '
+		           || event
+		           || chr(10)
+		           || lpad(' ', (level - 1) * 4)
+		           || 'SECONDS_IN_WAIT :  '
+		           || seconds_in_wait
+		           || chr(10)
+		           || lpad(' ', (level - 1) * 4)
+		           || 'STATE           :  '
+		           || state
+		           || chr(10)
+		           || lpad(' ', (level - 1) * 4)
+		           || 'STATUS          :  '
+		           || status
+		           || chr(10)
+		           || lpad(' ', (level - 1) * 4)
+		           || '========================='
+		           || chr(10)
+		              blocking_sess_info
+		      from (
+		                  select inst_id || '.' || sid id
+		                       , case
+		                            when blocking_instance is not null
+		                            then
+		                               blocking_instance || '.' || blocking_session
+		                         end
+		                            parent_id
+		                       , inst_id
+		                       , service_name
+		                       , sid
+		                       , serial#
+		                       , username
+		                       , osuser
+		                       , machine
+		                       , program
+		                       , module
+		                       , sql_id
+		                       , event
+		                       , seconds_in_wait
+		                       , state
+		                       , status
+		                       , level lvl
+		                       , connect_by_isleaf isleaf
+		                       , connect_by_root (inst_id || '.' || sid) rootid
+		                    from gv$session
+		              start with blocking_session is null
+		              connect by nocycle prior inst_id = blocking_instance
+		                             and prior sid = blocking_session
+		           )
+		     where lvl || isleaf <> '11'
+		       and rootid in
+		              (
+		                   select rootid
+		                     from (
+		                                 select level lvl
+		                                      , connect_by_root (inst_id || '.' || sid) rootid
+		                                      , seconds_in_wait
+		                                   from gv$session
+		                             start with blocking_session is null
+		                             connect by nocycle prior inst_id = blocking_instance
+		                                            and prior sid = blocking_session
+		                          )
+		                    where lvl > 1
+		                 group by rootid
+		                   having sum(seconds_in_wait) > 300
+		              )
+		connect by nocycle prior id = parent_id
+		start with parent_id is null`,
 	"dbversion": "select banner from gv$version where banner like '%Oracle Database%'",
 }
