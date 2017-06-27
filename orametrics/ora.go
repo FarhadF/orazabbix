@@ -29,10 +29,10 @@ func Init(connectionString string, zabbixHost string, zabbixPort int, hostName s
 		defer rows.Close()
 
 		for rows.Next() {
-			var sum string
-			rows.Scan(&sum)
-			fmt.Println(sum)
-			zabbixData[k] = sum
+			var res string
+			rows.Scan(&res)
+			fmt.Println(res)
+			zabbixData[k] = res
 
 		}
 	}
