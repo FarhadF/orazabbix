@@ -7,6 +7,11 @@ import (
 	_ "github.com/mattn/go-oci8"
 )
 
+type tsBytes struct {
+	ts    string `json:"TS"`
+	bytes string `json:"bytes"`
+}
+
 func Init(connectionString string, zabbixHost string, zabbixPort int, hostName string) {
 	db, err := sql.Open("oci8", connectionString)
 	if err != nil {
@@ -44,15 +49,6 @@ func Init(connectionString string, zabbixHost string, zabbixPort int, hostName s
 	for k, v := range discoveryQueries {
 		middle := make(map[string][]string)
 		result := runDiscoveryQuery(v, db)
-		length := len(result)
-		fix := make([]string, length)
-		for _, value := range result {
-
-			metric := runQuery(ts_usage_pct, db)
-			f := value + ":" + metric
-			fix = append(fix, f)
-
-		}
 		middle["data"] = result
 		discoveryData[k] = middle
 	}
@@ -60,6 +56,12 @@ func Init(connectionString string, zabbixHost string, zabbixPort int, hostName s
 	fmt.Println(string(j))
 	send(zabbixData, zabbixHost, zabbixPort, hostName)
 	sendD(discoveryData, zabbixHost, zabbixPort, hostName)
+	test := runTsBytesDiscoveryQuery(ts_usage_bytes, db)
+	tes, err := json.Marshal(test)
+	if err != nil {
+		fmt.Println(err)
+	}
+	fmt.Println(string(tes))
 }
 func runDiscoveryQuery(query string, db *sql.DB) []string {
 	rows, err := db.Query(query)
@@ -95,4 +97,24 @@ func runQuery(query string, db *sql.DB) string {
 		fmt.Println(res)
 	}
 	return res
+}
+
+func runTsBytesDiscoveryQuery(query string, db *sql.DB) []tsBytes {
+	rows, err := db.Query(query)
+	if err != nil {
+		fmt.Println("Error fetching addition")
+		fmt.Println(err)
+		var er []string
+		er = append(er, err.Error())
+		//return er
+	}
+	defer rows.Close()
+	var result []tsBytes
+	for rows.Next() {
+		var res tsBytes
+		rows.Scan(&res.ts, &res.bytes)
+		fmt.Println(res)
+		result = append(result, res)
+	}
+	return result
 }
