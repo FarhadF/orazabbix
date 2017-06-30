@@ -164,3 +164,6 @@ var queries = map[string]string{
 		start with parent_id is null`,
 	"dbversion": "select banner from gv$version where banner like '%Oracle Database%'",
 }
+var discoveryQueries = map[string]string{
+	"tablespaces": "select name ts from gv$tablespace",
+}
