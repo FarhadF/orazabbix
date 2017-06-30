@@ -21,29 +21,39 @@ func Init(connectionString string, zabbixHost string, zabbixPort int, hostName s
 	}
 	zabbixData := make(map[string]string)
 	for k, v := range queries {
-		zabbixData[k] = runQuery(v, db)
-		/*	rows, err := db.Query(v)
-			if err != nil {
-				fmt.Println("Error fetching addition")
-				fmt.Println(err)
-				return
-			}
-			defer rows.Close()
+		//	zabbixData[k] = runQuery(v, db)
+		rows, err := db.Query(v)
+		if err != nil {
+			fmt.Println("Error fetching addition")
+			fmt.Println(err)
+			return
+		}
+		defer rows.Close()
 
-			for rows.Next() {
-				var res string
-				rows.Scan(&res)
-				fmt.Println(res)
-				zabbixData[k] = res
+		for rows.Next() {
+			var res string
+			rows.Scan(&res)
+			fmt.Println(res)
+			zabbixData[k] = res
 
-			}*/
+		}
 	}
 	fmt.Println(zabbixData)
 	//discoveryData := make(map[string][]string)
 	discoveryData := make(map[string]map[string][]string)
 	for k, v := range discoveryQueries {
 		middle := make(map[string][]string)
-		middle["data"] = runDiscoveryQuery(v, db)
+		result := runDiscoveryQuery(v, db)
+		length := len(result)
+		fix := make([]string, length)
+		for _, value := range result {
+
+			metric := runQuery(ts_usage_pct, db)
+			f := value + ":" + metric
+			fix = append(fix, f)
+
+		}
+		middle["data"] = result
 		discoveryData[k] = middle
 	}
 	j, _ := json.Marshal(discoveryData)

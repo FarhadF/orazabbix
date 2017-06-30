@@ -167,3 +167,8 @@ var queries = map[string]string{
 var discoveryQueries = map[string]string{
 	"tablespaces": "select name ts from gv$tablespace",
 }
+
+var (
+	ts_usage_pct   string = "select tablespace_name ts, round(used_percent, 5) pct from dba_tablespace_usage_metrics"
+	ts_usage_bytes string = "select ta.tablespace_name as ts, ta.used_space * tb.block_size as bytes from dba_tablespace_usage_metrics ta join dba_tablespaces tb on ta.tablespace_name = tb.tablespace_name"
+)
