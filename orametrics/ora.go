@@ -2,7 +2,7 @@ package orametrics
 
 import (
 	"database/sql"
-	"encoding/json"
+	//	"encoding/json"
 	"fmt"
 	_ "github.com/mattn/go-oci8"
 )
@@ -48,24 +48,25 @@ func Init(connectionString string, zabbixHost string, zabbixPort int, hostName s
 	discoveryData := make(map[string]string)
 	for k, v := range discoveryQueries {
 		result := runDiscoveryQuery(v, db)
-		var fix string = `{"data":[`
+		var fix string = "{\"data\":["
 		count := 1
 		len := len(result)
 		for _, va := range result {
 			if count < len {
-				fix = fix + `{"{#TS}":"` + va + `"},`
+				fix = fix + "{\"{#TS}\":\"" + va + "\"},"
 			} else {
-				fix = fix + `{"{#TS}":"` + va + `"}`
+				fix = fix + "{\"{#TS}\":\"" + va + "\"}"
 			}
 			count++
 		}
-		fix = fix + `]}`
+		fix = fix + "]}"
 		discoveryData[k] = fix
 	}
-	j := json.RawMessage(discoveryData["tablespaces"])
+	j := discoveryData["tablespaces"]
+	fmt.Println("----")
 	fmt.Println(string(j))
 	send(zabbixData, zabbixHost, zabbixPort, hostName)
-	sendD(discoveryData, zabbixHost, zabbixPort, hostName)
+	sendD(j, zabbixHost, zabbixPort, hostName)
 	ts_usage_bytes := runTsBytesDiscoveryQuery(ts_usage_bytes, db)
 	discoveryMetrics := make(map[string]string)
 	for _, v := range ts_usage_bytes {
