@@ -29,3 +29,58 @@ Flags:
   3. Restart cron service
   4. Latest data in zabbix frontend should start populating after a minute.
   
+## Features:
+- Autodiscovery for tablespaces
+- Tablespace size (bytes/percent)
+- Alive
+- Archivelog switch
+- Blocking Sessions
+- Blocking Sessions Full Information
+- DB Block Changes
+- DB Block Gets
+- DB Consistent Gets
+- DB Files Size
+- DB Hit Ratio
+- DB Physical Reads
+- DB Version
+- Hit ratio - BODY
+- Hit ratio - SQLAREA
+- Hit ratio - TABLE/PROCEDURE
+- Hit ratio - TRIGGER
+- Max Processes
+- Max Sessions
+- Miss Latch
+- PGA
+- PGA Aggregate target
+- PHI/O Datafile Reads
+- PHI/O Datafile Writes
+- PHI/O Redo Writes
+- Pin hit ratio - BODY
+- Pin hit ratio - SQLAREA
+- Pin hit ratio - TABLE-PROCEDURE
+- Pin hit ratio - TRIGGER
+- Pool dict cache
+- Pool free mem
+- Pool lib cache
+- Pool misc
+- Pool sql area
+- Processes
+- Session Active
+- Session Inactive
+- Sessions
+- Session System
+- SGA buffer cache
+- SGA fixed
+- SGA java pool
+- SGA large pool
+- SGA log buffer
+- SGA shared pool
+- Uptime
+- Waits Controlfile I/O
+- Waits direct path read
+- Waits File I/O
+- Waits Logsync
+- Waits Logwrite
+- Waits multiblock read
+- Waits single block read
+- Waits SQLNet
