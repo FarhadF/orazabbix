@@ -38,33 +38,31 @@ func Init(connectionString string, zabbixHost string, zabbixPort int, hostName s
 		for rows.Next() {
 			var res string
 			rows.Scan(&res)
-			fmt.Println(res)
 			zabbixData[k] = res
-
 		}
 	}
 	fmt.Println(zabbixData)
 	//discoveryData := make(map[string][]string)
 	discoveryData := make(map[string]string)
 	for k, v := range discoveryQueries {
-		result := runDiscoveryQuery(v, db)
-		var fix string = "{\"data\":["
-		count := 1
-		len := len(result)
-		for _, va := range result {
-			if count < len {
-				fix = fix + "{\"{#TS}\":\"" + va + "\"},"
-			} else {
-				fix = fix + "{\"{#TS}\":\"" + va + "\"}"
+		if k == "tablespaces" {
+			result := runDiscoveryQuery(v, db)
+			var fix string = "{\"data\":["
+			count := 1
+			len := len(result)
+			for _, va := range result {
+				if count < len {
+					fix = fix + "{\"{#TS}\":\"" + va + "\"},"
+				} else {
+					fix = fix + "{\"{#TS}\":\"" + va + "\"}"
+				}
+				count++
 			}
-			count++
+			fix = fix + "]}"
+			discoveryData[k] = fix
 		}
-		fix = fix + "]}"
-		discoveryData[k] = fix
 	}
 	j := discoveryData["tablespaces"]
-	fmt.Println("----")
-	fmt.Println(string(j))
 	send(zabbixData, zabbixHost, zabbixPort, hostName)
 	sendD(j, zabbixHost, zabbixPort, hostName)
 	ts_usage_bytes := runTsBytesDiscoveryQuery(ts_usage_bytes, db)
@@ -94,7 +92,6 @@ func runDiscoveryQuery(query string, db *sql.DB) []string {
 	for rows.Next() {
 		var res string
 		rows.Scan(&res)
-		fmt.Println(res)
 		result = append(result, res)
 	}
 	return result
@@ -111,7 +108,6 @@ func runQuery(query string, db *sql.DB) string {
 	var res string
 	for rows.Next() {
 		rows.Scan(&res)
-		fmt.Println(res)
 	}
 	return res
 }
@@ -130,7 +126,7 @@ func runTsBytesDiscoveryQuery(query string, db *sql.DB) []tsBytes {
 	for rows.Next() {
 		var res tsBytes
 		rows.Scan(&res.Ts, &res.Bytes)
-		fmt.Println(res)
+
 		result = append(result, res)
 	}
 	return result
