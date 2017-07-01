@@ -66,9 +66,13 @@ func Init(connectionString string, zabbixHost string, zabbixPort int, hostName s
 	send(zabbixData, zabbixHost, zabbixPort, hostName)
 	sendD(j, zabbixHost, zabbixPort, hostName)
 	ts_usage_bytes := runTsBytesDiscoveryQuery(ts_usage_bytes, db)
+	ts_usage_pct := runTsBytesDiscoveryQuery(ts_usage_pct, db)
 	discoveryMetrics := make(map[string]string)
 	for _, v := range ts_usage_bytes {
 		discoveryMetrics[`ts_usage_bytes[`+v.Ts+`]`] = v.Bytes
+	}
+	for _, v := range ts_usage_pct {
+		discoveryMetrics[`ts_usage_pct[`+v.Ts+`]`] = v.Bytes
 	}
 	fmt.Println(discoveryMetrics)
 	send(discoveryMetrics, zabbixHost, zabbixPort, hostName)
