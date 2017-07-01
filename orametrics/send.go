@@ -2,6 +2,7 @@ package orametrics
 
 import (
 	"encoding/json"
+	"fmt"
 	. "github.com/blacked/go-zabbix"
 	"time"
 )
@@ -9,6 +10,8 @@ import (
 func send(zabbixData map[string]string, zabbixHost string, zabbixPort int, hostName string) {
 	var metrics []*Metric
 	for k, v := range zabbixData {
+		fmt.Println(k)
+		fmt.Println(v)
 		metrics = append(metrics, NewMetric(hostName, k, v, time.Now().Unix()))
 		//metrics = append(metrics, NewMetric("server1", "status", "OK"))
 	}
@@ -20,10 +23,11 @@ func send(zabbixData map[string]string, zabbixHost string, zabbixPort int, hostN
 	z.Send(packet)
 }
 
-func sendD(discoveryData map[string]map[string][]string, zabbixHost string, zabbixPort int, hostName string) {
+func sendD(discoveryData map[string]string, zabbixHost string, zabbixPort int, hostName string) {
 	var metrics []*Metric
 	for k, v := range discoveryData {
 		j, _ := json.Marshal(v)
+		fmt.Println(k)
 		metrics = append(metrics, NewMetric(hostName, k, string(j), time.Now().Unix()))
 		//metrics = append(metrics, NewMetric("server1", "status", "OK"))
 	}

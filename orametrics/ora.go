@@ -8,8 +8,8 @@ import (
 )
 
 type tsBytes struct {
-	ts    string `json:"TS"`
-	bytes string `json:"bytes"`
+	Ts    string `json:"TS"`
+	Bytes string `json:"bytes"`
 }
 
 func Init(connectionString string, zabbixHost string, zabbixPort int, hostName string) {
@@ -45,23 +45,39 @@ func Init(connectionString string, zabbixHost string, zabbixPort int, hostName s
 	}
 	fmt.Println(zabbixData)
 	//discoveryData := make(map[string][]string)
-	discoveryData := make(map[string]map[string][]string)
+	discoveryData := make(map[string]string)
 	for k, v := range discoveryQueries {
-		middle := make(map[string][]string)
 		result := runDiscoveryQuery(v, db)
-		middle["data"] = result
-		discoveryData[k] = middle
+		var fix string = `{"data":[`
+		count := 1
+		len := len(result)
+		for _, va := range result {
+			if count < len {
+				fix = fix + `{"{#TS}":"` + va + `"},`
+			} else {
+				fix = fix + `{"{#TS}":"` + va + `"}`
+			}
+			count++
+		}
+		fix = fix + `]}`
+		discoveryData[k] = fix
 	}
-	j, _ := json.Marshal(discoveryData)
+	j := json.RawMessage(discoveryData["tablespaces"])
 	fmt.Println(string(j))
 	send(zabbixData, zabbixHost, zabbixPort, hostName)
 	sendD(discoveryData, zabbixHost, zabbixPort, hostName)
-	test := runTsBytesDiscoveryQuery(ts_usage_bytes, db)
-	tes, err := json.Marshal(test)
-	if err != nil {
-		fmt.Println(err)
+	ts_usage_bytes := runTsBytesDiscoveryQuery(ts_usage_bytes, db)
+	discoveryMetrics := make(map[string]string)
+	for _, v := range ts_usage_bytes {
+		discoveryMetrics[`ts_usage_bytes[`+v.Ts+`]`] = v.Bytes
 	}
-	fmt.Println(string(tes))
+	fmt.Println(discoveryMetrics)
+	send(discoveryMetrics, zabbixHost, zabbixPort, hostName)
+	//	tes, err := json.Marshal(discoveryMetrics)
+	//	if err != nil {
+	//		fmt.Println(err)
+	//	}
+	//	fmt.Println(string(tes))
 }
 func runDiscoveryQuery(query string, db *sql.DB) []string {
 	rows, err := db.Query(query)
@@ -112,7 +128,7 @@ func runTsBytesDiscoveryQuery(query string, db *sql.DB) []tsBytes {
 	var result []tsBytes
 	for rows.Next() {
 		var res tsBytes
-		rows.Scan(&res.ts, &res.bytes)
+		rows.Scan(&res.Ts, &res.Bytes)
 		fmt.Println(res)
 		result = append(result, res)
 	}
