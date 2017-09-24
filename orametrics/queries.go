@@ -166,6 +166,7 @@ var queries = map[string]string{
 }
 var discoveryQueries = map[string]string{
 	"tablespaces": "select name ts from gv$tablespace",
+	"diskgroups" : "select name from v$asm_diskgroup",
 }
 
 var (
