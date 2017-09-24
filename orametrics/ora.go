@@ -5,6 +5,7 @@ import (
 	//	"encoding/json"
 	"fmt"
 	_ "github.com/mattn/go-oci8"
+	"github.com/golang/glog"
 )
 
 type tsBytes struct {
@@ -13,15 +14,16 @@ type tsBytes struct {
 }
 
 func Init(connectionString string, zabbixHost string, zabbixPort int, hostName string) {
+	defer glog.Flush()
 	db, err := sql.Open("oci8", connectionString)
 	if err != nil {
-		fmt.Println(err)
+		glog.Fatal("Connection Failed!",err)
 		return
 	}
 	defer db.Close()
 
 	if err = db.Ping(); err != nil {
-		fmt.Printf("Error connecting to the database: %s\n", err)
+		glog.Fatal("Error connecting to the database: %s\n", err)
 		return
 	}
 	zabbixData := make(map[string]string)
@@ -29,8 +31,7 @@ func Init(connectionString string, zabbixHost string, zabbixPort int, hostName s
 		//	zabbixData[k] = runQuery(v, db)
 		rows, err := db.Query(v)
 		if err != nil {
-			fmt.Println("Error fetching addition")
-			fmt.Println(err)
+			glog.Error("Error fetching addition", err)
 			return
 		}
 		defer rows.Close()

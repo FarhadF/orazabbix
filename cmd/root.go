@@ -22,6 +22,7 @@ import (
 	"orazabbix/orametrics"
 	"os"
 	"strings"
+	goflag "flag"
 )
 
 var (
@@ -43,11 +44,12 @@ var RootCmd = &cobra.Command{
 }
 
 func runCmd(cmd *cobra.Command, args []string) {
-	if versionFlag := getFlagBoolPtr(cmd, "version"); versionFlag != nil {
-		fmt.Println("OraZabbix v1.0.0")
-	} else {
+	goflag.CommandLine.Parse([]string{})
+	//if versionFlag := getFlagBoolPtr(cmd, "version"); versionFlag != nil {
+	//	fmt.Println("OraZabbix v1.0.0")
+	//} else {
 		orametrics.Init(connectionString, zabbixHost, zabbixPort, hostName)
-	}
+	//}
 }
 
 // Execute adds all child commands to the root command sets flags appropriately.
@@ -70,11 +72,12 @@ func init() {
 	// Cobra also supports local flags, which will only run
 	// when this action is called directly.
 	//RootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
-	RootCmd.Flags().BoolP("version", "v", false, "Prints version information")
+	//RootCmd.Flags().BoolP("version", "v", false, "Prints version information")
 	RootCmd.Flags().StringVarP(&connectionString, "connectionstring", "c", "system/oracle@localhost:1521/xe", "ConnectionString to the Database, Format: username/password@ip:port/sid")
 	RootCmd.Flags().StringVarP(&zabbixHost, "zabbix", "z", "localhost", "Zabbix Server/Proxy Hostname or IP address")
 	RootCmd.Flags().IntVarP(&zabbixPort, "port", "p", 10051, "Zabbix Server/Proxy Port")
 	RootCmd.Flags().StringVarP(&hostName, "host", "H", "server1", "Hostname of the monitored object in zabbix server")
+	RootCmd.PersistentFlags().AddGoFlagSet(goflag.CommandLine)
 }
 
 func getFlagBoolPtr(cmd *cobra.Command, flag string) *bool {
