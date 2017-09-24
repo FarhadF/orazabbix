@@ -13,6 +13,12 @@ type tsBytes struct {
 	Bytes string `json:"bytes"`
 }
 
+type diskgroups struct {
+	Dg	string`json:"DG"`
+	UsableFileMB string `json:"USABLE_FILE_MB"`
+	OfflineDisks string `json:"OFFLINE_DISKS"`
+}
+
 func Init(connectionString string, zabbixHost string, zabbixPort int, hostName string) {
 	start := time.Now()
 	defer glog.Flush()
@@ -68,7 +74,6 @@ func Init(connectionString string, zabbixHost string, zabbixPort int, hostName s
 			var fixd string = "{\"data\":["
 			countd := 1
 			lend := len(resultd)
-			glog.Info("lend",lend)
 			for _, vd := range resultd {
 				if countd < lend {
 					fixd = fixd + "{\"{#DG}\":\"" + vd + "\"},"
@@ -86,12 +91,17 @@ func Init(connectionString string, zabbixHost string, zabbixPort int, hostName s
 	sendD(j, zabbixHost, zabbixPort, hostName)
 	ts_usage_bytes := runTsBytesDiscoveryQuery(ts_usage_bytes, db)
 	ts_usage_pct := runTsBytesDiscoveryQuery(ts_usage_pct, db)
+	diskGroupsMetrics := runDiskGroupsMetrics(diskgroup_metrics,db)
 	discoveryMetrics := make(map[string]string)
 	for _, v := range ts_usage_bytes {
 		discoveryMetrics[`ts_usage_bytes[`+v.Ts+`]`] = v.Bytes
 	}
 	for _, v := range ts_usage_pct {
 		discoveryMetrics[`ts_usage_pct[`+v.Ts+`]`] = v.Bytes
+	}
+	for _, v := range diskGroupsMetrics {
+		discoveryMetrics[`usable_file_mb[`+v.Dg + `]`] = v.UsableFileMB
+		discoveryMetrics[`offline_disks[`+v.Dg + `]`] = v.OfflineDisks
 	}
 	glog.Info("discoveryMetrics: ",discoveryMetrics)
 	glog.Info("discoveryData: ", discoveryData)
@@ -150,6 +160,24 @@ func runTsBytesDiscoveryQuery(query string, db *sql.DB) []tsBytes {
 		rows.Scan(&res.Ts, &res.Bytes)
 
 		result = append(result, res)
+	}
+	return result
+}
+
+func runDiskGroupsMetrics(query string, db *sql.DB) []diskgroups {
+	rows, err := db.Query(query)
+	if err != nil {
+		glog.Error("Error fetching addition",err)
+		var er []string
+		er = append(er, err.Error())
+		//return er
+	}
+	defer rows.Close()
+	var result []diskgroups
+	for rows.Next() {
+		var res diskgroups
+		rows.Scan(&res.Dg, &res.UsableFileMB, &res.OfflineDisks)
+        result = append(result, res)
 	}
 	return result
 }
