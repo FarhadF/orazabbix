@@ -3,9 +3,9 @@ package orametrics
 import (
 	"database/sql"
 	//	"encoding/json"
-	"fmt"
 	_ "github.com/mattn/go-oci8"
 	"github.com/golang/glog"
+	"time"
 )
 
 type tsBytes struct {
@@ -14,6 +14,7 @@ type tsBytes struct {
 }
 
 func Init(connectionString string, zabbixHost string, zabbixPort int, hostName string) {
+	start := time.Now()
 	defer glog.Flush()
 	db, err := sql.Open("oci8", connectionString)
 	if err != nil {
@@ -23,7 +24,7 @@ func Init(connectionString string, zabbixHost string, zabbixPort int, hostName s
 	defer db.Close()
 
 	if err = db.Ping(); err != nil {
-		glog.Fatal("Error connecting to the database: %s\n", err)
+		glog.Fatal("Error connecting to the database:", err)
 		return
 	}
 	zabbixData := make(map[string]string)
@@ -42,7 +43,7 @@ func Init(connectionString string, zabbixHost string, zabbixPort int, hostName s
 			zabbixData[k] = res
 		}
 	}
-	fmt.Println(zabbixData)
+	glog.Info("zabbixData:",zabbixData)
 	//discoveryData := make(map[string][]string)
 	discoveryData := make(map[string]string)
 	for k, v := range discoveryQueries {
@@ -75,8 +76,9 @@ func Init(connectionString string, zabbixHost string, zabbixPort int, hostName s
 	for _, v := range ts_usage_pct {
 		discoveryMetrics[`ts_usage_pct[`+v.Ts+`]`] = v.Bytes
 	}
-	fmt.Println(discoveryMetrics)
+	glog.Info("discoveryMetrics:",(discoveryMetrics))
 	send(discoveryMetrics, zabbixHost, zabbixPort, hostName)
+	glog.Info(time.Since(start))
 	//	tes, err := json.Marshal(discoveryMetrics)
 	//	if err != nil {
 	//		fmt.Println(err)
@@ -86,8 +88,7 @@ func Init(connectionString string, zabbixHost string, zabbixPort int, hostName s
 func runDiscoveryQuery(query string, db *sql.DB) []string {
 	rows, err := db.Query(query)
 	if err != nil {
-		fmt.Println("Error fetching addition")
-		fmt.Println(err)
+		glog.Error("Error fetching addition",err)
 		var er []string
 		er = append(er, err.Error())
 		return er
@@ -105,8 +106,7 @@ func runDiscoveryQuery(query string, db *sql.DB) []string {
 func runQuery(query string, db *sql.DB) string {
 	rows, err := db.Query(query)
 	if err != nil {
-		fmt.Println("Error fetching addition")
-		fmt.Println(err)
+		glog.Error("Error fetching addition", err)
 		return err.Error()
 	}
 	defer rows.Close()
@@ -120,8 +120,7 @@ func runQuery(query string, db *sql.DB) string {
 func runTsBytesDiscoveryQuery(query string, db *sql.DB) []tsBytes {
 	rows, err := db.Query(query)
 	if err != nil {
-		fmt.Println("Error fetching addition")
-		fmt.Println(err)
+		glog.Error("Error fetching addition",err)
 		var er []string
 		er = append(er, err.Error())
 		//return er
