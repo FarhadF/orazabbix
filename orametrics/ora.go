@@ -89,9 +89,7 @@ func Init(connectionString string, zabbixHost string, zabbixPort int, hostName s
 	j := discoveryData["tablespaces"]
 	d := discoveryData["diskgroups"]
 
-	send(zabbixData, zabbixHost, zabbixPort, hostName)
-	sendD(j,"tablespaces", zabbixHost, zabbixPort, hostName)
-	sendD(d,"diskgroups",zabbixHost,zabbixPort,hostName)
+
 	ts_usage_bytes := runTsBytesDiscoveryQuery(ts_usage_bytes, db)
 	ts_usage_pct := runTsBytesDiscoveryQuery(ts_usage_pct, db)
 	diskGroupsMetrics := runDiskGroupsMetrics(diskgroup_metrics,db)
@@ -108,7 +106,14 @@ func Init(connectionString string, zabbixHost string, zabbixPort int, hostName s
 	}
 	glog.Info("discoveryMetrics: ",discoveryMetrics)
 	glog.Info("discoveryData: ", discoveryData)
-	send(discoveryMetrics, zabbixHost, zabbixPort, hostName)
+	for k, v := range discoveryMetrics {
+		zabbixData[k] = v
+	}
+	//send(discoveryMetrics, zabbixHost, zabbixPort, hostName)
+	glog.Info("zabbixData Combined: ",zabbixData)
+	send(zabbixData, zabbixHost, zabbixPort, hostName)
+	sendD(j,"tablespaces", zabbixHost, zabbixPort, hostName)
+	sendD(d,"diskgroups",zabbixHost,zabbixPort,hostName)
 	glog.Info(time.Since(start))
 	//	tes, err := json.Marshal(discoveryMetrics)
 	//	if err != nil {
