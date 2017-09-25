@@ -6,6 +6,7 @@ import (
 	_ "github.com/mattn/go-oci8"
 	"github.com/golang/glog"
 	"time"
+	"strconv"
 )
 
 type tsBytes struct {
@@ -101,7 +102,10 @@ func Init(connectionString string, zabbixHost string, zabbixPort int, hostName s
 		discoveryMetrics[`ts_usage_pct[`+v.Ts+`]`] = v.Bytes
 	}
 	for _, v := range diskGroupsMetrics {
-		discoveryMetrics[`usable_file_mb[`+v.Dg + `]`] = v.UsableFileMB
+		bytes, _ := strconv.Atoi(v.UsableFileMB)
+		bytes = bytes * 1048576
+		bytesS := strconv.Itoa(bytes)
+		discoveryMetrics[`usable_file_mb[`+v.Dg + `]`] = bytesS
 		discoveryMetrics[`offline_disks[`+v.Dg + `]`] = v.OfflineDisks
 	}
 	glog.Info("discoveryMetrics: ",discoveryMetrics)
