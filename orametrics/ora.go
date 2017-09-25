@@ -87,8 +87,11 @@ func Init(connectionString string, zabbixHost string, zabbixPort int, hostName s
 		}
 	}
 	j := discoveryData["tablespaces"]
+	d := discoveryData["diskgroups"]
+
 	send(zabbixData, zabbixHost, zabbixPort, hostName)
-	sendD(j, zabbixHost, zabbixPort, hostName)
+	sendD(j,"tablespaces", zabbixHost, zabbixPort, hostName)
+	sendD(d,"diskgroups",zabbixHost,zabbixPort,hostName)
 	ts_usage_bytes := runTsBytesDiscoveryQuery(ts_usage_bytes, db)
 	ts_usage_pct := runTsBytesDiscoveryQuery(ts_usage_pct, db)
 	diskGroupsMetrics := runDiskGroupsMetrics(diskgroup_metrics,db)
