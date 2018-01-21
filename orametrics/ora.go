@@ -75,6 +75,15 @@ func Init(connectionString string, zabbixHost string, zabbixPort int, hostName s
 			zabbixData[k] = res
 		}
 	}
+	if zabbixData["pool_dict_cache"] == "" {
+		zabbixData["pool_dict_cache"] = "0"
+	}
+	if zabbixData["pool_lib_cache"] == "" {
+		zabbixData["pool_lib_cache"] = "0"
+	}
+	if zabbixData["pool_sql_area"] == "" {
+		zabbixData["pool_sql_area"] = "0"
+	}
 	//glog.Info("zabbixData:", zabbixData)
 	//discoveryData := make(map[string][]string)
 	discoveryData := make(map[string]string)
