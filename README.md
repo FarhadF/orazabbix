@@ -1,5 +1,5 @@
 # orazabbix
-Oracle Database Monitoring on Zabbix, Blazing Fast via Golang.
+Oracle Database (Supporting RAC) Monitoring on Zabbix, Blazing Fast via Golang.
 
 ## Build Steps:
 1. Clone repo
@@ -34,6 +34,9 @@ Flags:
   ```
   3. Restart cron service
   4. Latest data in Zabbix frontend should start populating after a minute.
+  
+  ## Docker
+  Or Use provided Dockerfile to build an image and monitor remotely.
   
 ## Features:
 - Autodiscovery for tablespaces
@@ -93,3 +96,25 @@ Flags:
 - Waits multiblock read
 - Waits single block read
 - Waits SQLNet
+- Inst ID 
+- Instance Number 
+- Instance Name	
+- Instance Hostname
+- Instance Version
+- Instance Startup Time
+- Instance Status
+- Instance Parallel
+- Instance Thread No
+- Instance Archiver
+- Instance Log Switch Wait
+- Instance Logins
+- Instance Pending Shutdown 
+- Instance Database Status
+- Instance Role
+- Instance Active State
+- Instance Blocked
+- Instance Con ID
+- Instance Mode
+- Instance Edition
+- Instance Family
+- Instance Database Type
