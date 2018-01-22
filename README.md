@@ -41,6 +41,7 @@ Flags:
 ## Features:
 - Autodiscovery for tablespaces
 - Autodiscovery for ASM Diskgroups
+- AutoDiscovery for Instances
 - Tablespace size (bytes/percent)
 - ASM Diskgroups size (bytes)
 - ASM Diskgroups Offline Disks Count
