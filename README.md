@@ -6,6 +6,10 @@ Oracle Database (Supporting RAC) Monitoring on Zabbix, Blazing Fast via Golang.
 2. Setup oracle instant client and environment variables. [Guide](https://gocodecloud.com/blog/2016/08/09/accessing-an-oracle-db-in-go/)
 3. `go build main.go`
 
+or
+
+Use Dockerfile for multistage build
+
 ```
 Usage:
   orazabbix [flags]
@@ -36,7 +40,12 @@ Flags:
   4. Latest data in Zabbix frontend should start populating after a minute.
   
   ## Docker
-  Or Use provided Dockerfile to build an image and monitor remotely.
+  Or Use provided Dockerfile to build an image and monitor remotely. Build base image from https://github.com/jeanmorais/docker-go-oci8 with 
+
+  ```
+  docker build -t go-oci8:latest .
+  ```
+
   
 ## Features:
 - Autodiscovery for tablespaces
