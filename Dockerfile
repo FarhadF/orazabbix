@@ -12,6 +12,6 @@ RUN go build -o /orazabbix
 FROM store/oracle/database-instantclient:12.2.0.1
 
 COPY --from=builder /orazabbix /orazabbix
-ADD ./docker/orazabbix.sh /
+ADD ./docker/* /
 
 CMD ["/orazabbix.sh"]

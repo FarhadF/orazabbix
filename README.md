@@ -40,10 +40,17 @@ Flags:
   4. Latest data in Zabbix frontend should start populating after a minute.
   
   ## Docker
-  Or Use provided Dockerfile to build an image and monitor remotely. Build base image from https://github.com/jeanmorais/docker-go-oci8 with 
+  Or Use provided Dockerfile to build an image and monitor remotely. 
+  Put bases for monitoring in docker/bases.txt
 
   ```
-  docker build -t go-oci8:latest .
+   -z <zabbix_server_host> -c <orazabbix_oracle_user>/<oracle_password>@<oracle_host>:1521/<sid> -H <zabbix_monitored_host_name>
+  ```
+
+  Build base image from https://github.com/jeanmorais/docker-go-oci8 with 
+
+  ```
+  docker build -t orazabbix:latest .
   ```
 
   

@@ -64,7 +64,7 @@ func Init(connectionString string, zabbixHost string, zabbixPort int, hostName s
 		//	zabbixData[k] = runQuery(v, db)
 		rows, err := db.Query(v)
 		if err != nil {
-			glog.Error("Error fetching addition", err)
+			glog.Error("Error fetching addition. ", err, k, v)
 			return
 		}
 		defer rows.Close()
@@ -141,12 +141,16 @@ func Init(connectionString string, zabbixHost string, zabbixPort int, hostName s
 	//d := discoveryData["diskgroups"]
 
 	ts_usage_bytes := runTsBytesDiscoveryQuery(ts_usage_bytes, db)
+	ts_maxsize_bytes := runTsBytesDiscoveryQuery(ts_maxsize_bytes, db)
 	ts_usage_pct := runTsBytesDiscoveryQuery(ts_usage_pct, db)
 	diskGroupsMetrics := runDiskGroupsMetrics(diskgroup_metrics, db)
 	instanceMetrics := runInstanceMetrics(instance_metrics, db)
 	discoveryMetrics := make(map[string]string)
 	for _, v := range ts_usage_bytes {
 		discoveryMetrics[`ts_usage_bytes[`+v.Ts+`]`] = v.Bytes
+	}
+	for _, v := range ts_maxsize_bytes {
+		discoveryMetrics[`ts_maxsize_bytes[`+v.Ts+`]`] = v.Bytes
 	}
 	for _, v := range ts_usage_pct {
 		discoveryMetrics[`ts_usage_pct[`+v.Ts+`]`] = v.Bytes
@@ -208,7 +212,7 @@ func Init(connectionString string, zabbixHost string, zabbixPort int, hostName s
 func runDiscoveryQuery(query string, db *sql.DB) []string {
 	rows, err := db.Query(query)
 	if err != nil {
-		glog.Error("Error fetching addition", err)
+		glog.Error("Error fetching addition", err, query)
 		var er []string
 		er = append(er, err.Error())
 		return er
@@ -259,7 +263,7 @@ func runTsBytesDiscoveryQuery(query string, db *sql.DB) []tsBytes {
 func runDiskGroupsMetrics(query string, db *sql.DB) []diskgroups {
 	rows, err := db.Query(query)
 	if err != nil {
-		glog.Error("Error fetching addition", err)
+		glog.Error("Error fetching addition", err, query)
 		var er []string
 		er = append(er, err.Error())
 		//return er
@@ -275,15 +279,16 @@ func runDiskGroupsMetrics(query string, db *sql.DB) []diskgroups {
 }
 
 func runInstanceMetrics(query string, db *sql.DB) []instance {
+	var result []instance
+
 	rows, err := db.Query(query)
 	if err != nil {
-		glog.Error("Error fetching addition", err)
+		glog.Error("Error fetching addition", err, query)
 		var er []string
 		er = append(er, err.Error())
-		//return er
+		return result
 	}
 	defer rows.Close()
-	var result []instance
 	for rows.Next() {
 		var res instance
 		err := rows.Scan(&res.INST_ID, &res.INSTANCE_NUMBER, &res.INSTANCE_NAME, &res.HOST_NAME, &res.VERSION, &res.STARTUP_TIME,
