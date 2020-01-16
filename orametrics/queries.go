@@ -3,7 +3,7 @@ package orametrics
 var queries = map[string]string{
 	"alive":                "select 1 from dual",
 	"archivelog_switch":    "select count(*) from gv$log_history where first_time >= (sysdate - 1 / 24)",
-	"uptime":               "select to_char ( (sysdate - startup_time) *24 , 'FM99999999999999990') from gv$instance",
+	"uptime":               "select to_char ( (sysdate - startup_time) *24*60 , 'FM99999999999999990') from gv$instance",
 	"dbblockgets":          "select sum (value) from gv$sysstat where name = 'db block gets'",
 	"dbblockchanges":       "select sum (value) from gv$sysstat where name = 'db block changes'",
 	"dbconsistentgets":     "select sum (value) from gv$sysstat where name = 'consistent gets'",
