@@ -14,15 +14,15 @@
 package cmd
 
 import (
+	goflag "flag"
 	"fmt"
-	homedir "github.com/mitchellh/go-homedir"
+	"github.com/mitchellh/go-homedir"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 	"log"
 	"orazabbix/orametrics"
 	"os"
 	"strings"
-	goflag "flag"
 )
 
 var (
@@ -48,7 +48,7 @@ func runCmd(cmd *cobra.Command, args []string) {
 	//if versionFlag := getFlagBoolPtr(cmd, "version"); versionFlag != nil {
 	//	fmt.Println("OraZabbix v1.0.0")
 	//} else {
-		orametrics.Init(connectionString, zabbixHost, zabbixPort, hostName)
+	orametrics.Init(connectionString, zabbixHost, zabbixPort, hostName)
 	//}
 }
 

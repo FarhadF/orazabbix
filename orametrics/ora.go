@@ -2,11 +2,10 @@ package orametrics
 
 import (
 	"database/sql"
-	//	"encoding/json"
-	_ "github.com/mattn/go-oci8"
 	"github.com/golang/glog"
-	"time"
+	_ "github.com/mattn/go-oci8"
 	"strconv"
+	"time"
 )
 
 type tsBytes struct {
@@ -21,28 +20,28 @@ type diskgroups struct {
 }
 
 type instance struct {
-	INST_ID          string `json:"INST_ID"`
-	INSTANCE_NUMBER  string `json:"INSTANCE_NUMBER"`
-	INSTANCE_NAME	 string `json:"INSTANCE_NAME"`
-	HOST_NAME        string `json:"HOST_NAME"`
-	VERSION          string `json:"VERSION"`
-	STARTUP_TIME     string `json:"STARTUP_TIME"`
-	STATUS           string `json:"STATUS"`
-	PARALLEL         string `json:"PARALLEL"`
-	THREAD_NO        string `json:"THREAD_NO"`
-	ARCHIVER         string `json:"ARCHIVER"`
+	INST_ID          string         `json:"INST_ID"`
+	INSTANCE_NUMBER  string         `json:"INSTANCE_NUMBER"`
+	INSTANCE_NAME    string         `json:"INSTANCE_NAME"`
+	HOST_NAME        string         `json:"HOST_NAME"`
+	VERSION          string         `json:"VERSION"`
+	STARTUP_TIME     string         `json:"STARTUP_TIME"`
+	STATUS           string         `json:"STATUS"`
+	PARALLEL         string         `json:"PARALLEL"`
+	THREAD_NO        string         `json:"THREAD_NO"`
+	ARCHIVER         string         `json:"ARCHIVER"`
 	LOG_SWITCH_WAIT  sql.NullString `json:"LOG_SWITCH_WAIT"`
-	LOGINS           string `json:"LOGINS"`
-	SHUTDOWN_PENDING string `json:"SHUTDOWN_PENDING"`
-	DATABASE_STATUS  string `json:"DATABASE_STATUS"`
-	INSTANCE_ROLE    string `json:"INSTANCE_ROLE"`
-	ACTIVE_STATE     string `json:"ACTIVE_STATE"`
-	BLOCKED          string `json:"BLOCKED"`
-	CON_ID           string `json:"CON_ID"`
-	INSTANCE_MODE    string `json:"INSTANCE_MODE"`
-	EDITION          string `json:"EDITION"`
+	LOGINS           string         `json:"LOGINS"`
+	SHUTDOWN_PENDING string         `json:"SHUTDOWN_PENDING"`
+	DATABASE_STATUS  string         `json:"DATABASE_STATUS"`
+	INSTANCE_ROLE    string         `json:"INSTANCE_ROLE"`
+	ACTIVE_STATE     string         `json:"ACTIVE_STATE"`
+	BLOCKED          string         `json:"BLOCKED"`
+	CON_ID           string         `json:"CON_ID"`
+	INSTANCE_MODE    string         `json:"INSTANCE_MODE"`
+	EDITION          string         `json:"EDITION"`
 	FAMILY           sql.NullString `json:"FAMILY"`
-	DATABASE_TYPE    string `json:"DATABASE_TYPE"`
+	DATABASE_TYPE    string         `json:"DATABASE_TYPE"`
 }
 
 func Init(connectionString string, zabbixHost string, zabbixPort int, hostName string) {
@@ -61,7 +60,6 @@ func Init(connectionString string, zabbixHost string, zabbixPort int, hostName s
 	}
 	zabbixData := make(map[string]string)
 	for k, v := range queries {
-		//	zabbixData[k] = runQuery(v, db)
 		rows, err := db.Query(v)
 		if err != nil {
 			glog.Error("Error fetching addition", err)
@@ -71,7 +69,10 @@ func Init(connectionString string, zabbixHost string, zabbixPort int, hostName s
 
 		for rows.Next() {
 			var res string
-			rows.Scan(&res)
+			err := rows.Scan(&res)
+			if err != nil {
+
+			}
 			zabbixData[k] = res
 		}
 	}
@@ -84,17 +85,14 @@ func Init(connectionString string, zabbixHost string, zabbixPort int, hostName s
 	if zabbixData["pool_sql_area"] == "" {
 		zabbixData["pool_sql_area"] = "0"
 	}
-	//glog.Info("zabbixData:", zabbixData)
-	//discoveryData := make(map[string][]string)
 	discoveryData := make(map[string]string)
 	for k, v := range discoveryQueries {
 		if k == "tablespaces" {
 			result := runDiscoveryQuery(v, db)
-			var fix string = "{\"data\":["
+			fix := "{\"data\":["
 			count := 1
-			len := len(result)
 			for _, va := range result {
-				if count < len {
+				if count < len(result) {
 					fix = fix + "{\"{#TS}\":\"" + va + "\"},"
 				} else {
 					fix = fix + "{\"{#TS}\":\"" + va + "\"}"
@@ -106,7 +104,7 @@ func Init(connectionString string, zabbixHost string, zabbixPort int, hostName s
 		}
 		if k == "diskgroups" {
 			resultd := runDiscoveryQuery(v, db)
-			var fixd string = "{\"data\":["
+			var fixd  = "{\"data\":["
 			countd := 1
 			lend := len(resultd)
 			for _, vd := range resultd {
@@ -137,8 +135,6 @@ func Init(connectionString string, zabbixHost string, zabbixPort int, hostName s
 			discoveryData[k] = fixd
 		}
 	}
-	//j := discoveryData["tablespaces"]
-	//d := discoveryData["diskgroups"]
 
 	ts_usage_bytes := runTsBytesDiscoveryQuery(ts_usage_bytes, db)
 	ts_usage_pct := runTsBytesDiscoveryQuery(ts_usage_pct, db)
@@ -185,33 +181,21 @@ func Init(connectionString string, zabbixHost string, zabbixPort int, hostName s
 		discoveryMetrics[`FAMILY[`+v.INSTANCE_NAME+`]`] = v.FAMILY.String
 		discoveryMetrics[`DATABASE_TYPE[`+v.INSTANCE_NAME+`]`] = v.DATABASE_TYPE
 	}
-	//glog.Info("discoveryMetrics: ", discoveryMetrics)
-	//glog.Info("discoveryData: ", discoveryData)
 	for k, v := range discoveryMetrics {
 		zabbixData[k] = v
 	}
 	for k, v := range discoveryData {
 		zabbixData[k] = v
 	}
-	//send(discoveryMetrics, zabbixHost, zabbixPort, hostName)
 	glog.Info("zabbixData Combined: ", zabbixData)
 	send(zabbixData, zabbixHost, zabbixPort, hostName)
-	//sendD(j,"tablespaces", zabbixHost, zabbixPort, hostName)
-	//sendD(d,"diskgroups",zabbixHost,zabbixPort,hostName)
 	glog.Info(time.Since(start))
-	//	tes, err := json.Marshal(discoveryMetrics)
-	//	if err != nil {
-	//		fmt.Println(err)
-	//	}
-	//	fmt.Println(string(tes))
 }
 func runDiscoveryQuery(query string, db *sql.DB) []string {
 	rows, err := db.Query(query)
 	if err != nil {
 		glog.Error("Error fetching addition", err)
-		var er []string
-		er = append(er, err.Error())
-		return er
+		return nil
 	}
 	defer rows.Close()
 	var result []string
@@ -223,27 +207,11 @@ func runDiscoveryQuery(query string, db *sql.DB) []string {
 	return result
 }
 
-func runQuery(query string, db *sql.DB) string {
-	rows, err := db.Query(query)
-	if err != nil {
-		glog.Error("Error fetching addition", err)
-		return err.Error()
-	}
-	defer rows.Close()
-	var res string
-	for rows.Next() {
-		rows.Scan(&res)
-	}
-	return res
-}
-
 func runTsBytesDiscoveryQuery(query string, db *sql.DB) []tsBytes {
 	rows, err := db.Query(query)
 	if err != nil {
 		glog.Error("Error fetching addition", err)
-		var er []string
-		er = append(er, err.Error())
-		//return er
+		return nil
 	}
 	defer rows.Close()
 	var result []tsBytes
@@ -260,9 +228,7 @@ func runDiskGroupsMetrics(query string, db *sql.DB) []diskgroups {
 	rows, err := db.Query(query)
 	if err != nil {
 		glog.Error("Error fetching addition", err)
-		var er []string
-		er = append(er, err.Error())
-		//return er
+		return nil
 	}
 	defer rows.Close()
 	var result []diskgroups
@@ -278,9 +244,7 @@ func runInstanceMetrics(query string, db *sql.DB) []instance {
 	rows, err := db.Query(query)
 	if err != nil {
 		glog.Error("Error fetching addition", err)
-		var er []string
-		er = append(er, err.Error())
-		//return er
+		return nil
 	}
 	defer rows.Close()
 	var result []instance

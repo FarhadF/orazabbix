@@ -1,6 +1,6 @@
 #!/bin/sh
 while true
 do
-    ./orazabbix $@
+    /orazabbix $@
 	sleep 30
 done
