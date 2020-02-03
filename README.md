@@ -38,7 +38,7 @@ Flags:
   ## Docker
   1. Build instantclient image of choice, ie. 19.5 using oracle official [Dockerfile](https://github.com/oracle/docker-images/tree/master/OracleInstantClient).
   2. Use provided Dockerfile to build the image and monitor remotely.
-  3. docker run -d --name orazabix <build image id/name> /orazabbix.sh <Flags> 
+  3. ```docker run -d --name orazabix <build image id/name> /orazabbix.sh <Flags> ```
   
 ## Features:
 - Autodiscovery for tablespaces
