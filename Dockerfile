@@ -11,7 +11,7 @@ export LD_LIBRARY_PATH=/usr/lib/oracle/19.5/client64/lib/ && \
 export PKG_CONFIG_PATH=/usr/lib/oracle/19.5/client64/lib/ && \
 export CGO_CFLAGS="-I/usr/include/oracle/19.5/client64/" && \
 export CGO_LDFLAGS="-L/usr/lib/oracle/19.5/client64/lib/ -lstdc++ -lclntsh"  && \
-go get && go build -tags noPkgConfig -o /orazabbix main.go
+go mod vendor && go build -mod=vendor -tags noPkgConfig -o /orazabbix main.go
 ADD orazabbix.sh /
 
 CMD ["/orazabbix.sh"]
