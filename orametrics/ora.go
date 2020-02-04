@@ -2,8 +2,8 @@ package orametrics
 
 import (
 	"database/sql"
-	"github.com/golang/glog"
 	_ "github.com/mattn/go-oci8"
+	"github.com/rs/zerolog/log"
 	"strconv"
 	"time"
 )
@@ -46,23 +46,24 @@ type instance struct {
 
 func Init(connectionString string, zabbixHost string, zabbixPort int, hostName string) {
 	start := time.Now()
-	defer glog.Flush()
+
+	defer log.Info().Dur("took", time.Since(start)).Msg("")
 	db, err := sql.Open("oci8", connectionString)
 	if err != nil {
-		glog.Fatal("Connection Failed!", err)
+		log.Error().Err(err).Msg("Connection Failed!")
 		return
 	}
 	defer db.Close()
 
 	if err = db.Ping(); err != nil {
-		glog.Fatal("Error connecting to the database:", err)
+		log.Error().Err(err).Msg("Error connecting to the database")
 		return
 	}
 	zabbixData := make(map[string]string)
 	for k, v := range queries {
 		rows, err := db.Query(v)
 		if err != nil {
-			glog.Error("Error fetching addition", err)
+			log.Error().Err(err).Msg("Error fetching")
 			return
 		}
 		defer rows.Close()
@@ -187,14 +188,13 @@ func Init(connectionString string, zabbixHost string, zabbixPort int, hostName s
 	for k, v := range discoveryData {
 		zabbixData[k] = v
 	}
-	glog.Info("zabbixData Combined: ", zabbixData)
+
 	send(zabbixData, zabbixHost, zabbixPort, hostName)
-	glog.Info(time.Since(start))
 }
 func runDiscoveryQuery(query string, db *sql.DB) []string {
 	rows, err := db.Query(query)
 	if err != nil {
-		glog.Error("Error fetching addition", err)
+		log.Error().Err(err).Msg("Error fetching")
 		return nil
 	}
 	defer rows.Close()
@@ -210,7 +210,7 @@ func runDiscoveryQuery(query string, db *sql.DB) []string {
 func runTsBytesDiscoveryQuery(query string, db *sql.DB) []tsBytes {
 	rows, err := db.Query(query)
 	if err != nil {
-		glog.Error("Error fetching addition", err)
+		log.Error().Err(err).Msg("Error fetching")
 		return nil
 	}
 	defer rows.Close()
@@ -227,7 +227,7 @@ func runTsBytesDiscoveryQuery(query string, db *sql.DB) []tsBytes {
 func runDiskGroupsMetrics(query string, db *sql.DB) []diskgroups {
 	rows, err := db.Query(query)
 	if err != nil {
-		glog.Error("Error fetching addition", err)
+		log.Error().Err(err).Msg("Error fetching")
 		return nil
 	}
 	defer rows.Close()
@@ -243,7 +243,7 @@ func runDiskGroupsMetrics(query string, db *sql.DB) []diskgroups {
 func runInstanceMetrics(query string, db *sql.DB) []instance {
 	rows, err := db.Query(query)
 	if err != nil {
-		glog.Error("Error fetching addition", err)
+		log.Error().Err(err).Msg("Error fetching")
 		return nil
 	}
 	defer rows.Close()
@@ -256,7 +256,7 @@ func runInstanceMetrics(query string, db *sql.DB) []instance {
 			&res.INSTANCE_MODE, &res.EDITION, &res.FAMILY, &res.DATABASE_TYPE)
 		result = append(result, res)
 		if err != nil {
-			glog.Error(err)
+			log.Error().Err(err).Msg("")
 		}
 
 	}

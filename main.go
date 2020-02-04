@@ -14,14 +14,9 @@
 package main
 
 import (
-	"fmt"
 	"orazabbix/cmd"
-	"time"
 )
 
 func main() {
-	start := time.Now()
 	cmd.Execute()
-	run := time.Since(start)
-	fmt.Println(run)
 }
