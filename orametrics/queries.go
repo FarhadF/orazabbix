@@ -173,6 +173,6 @@ var discoveryQueries = map[string]string{
 var (
 	ts_usage_pct   string = "select tablespace_name ts, round(used_percent, 5) pct from dba_tablespace_usage_metrics"
 	ts_usage_bytes string = "select ta.tablespace_name as ts, ta.used_space * tb.block_size as bytes from dba_tablespace_usage_metrics ta join dba_tablespaces tb on ta.tablespace_name = tb.tablespace_name"
-	diskgroup_metrics string = "select name as Dg,USABLE_FILE_MB as UsableFileMB, OFFLINE_DISKS as UsableFileMB from v$asm_diskgroup"
+	diskgroup_metrics string = "select name as Dg,USABLE_FILE_MB as UsableFileMB, OFFLINE_DISKS as OfflineDisks from v$asm_diskgroup"
 	instance_metrics string = "select INST_ID, INSTANCE_NUMBER, INSTANCE_NAME, HOST_NAME, VERSION, STARTUP_TIME, STATUS, PARALLEL, THREAD# AS THREAD_NO, ARCHIVER, LOG_SWITCH_WAIT, LOGINS, SHUTDOWN_PENDING, DATABASE_STATUS, INSTANCE_ROLE, ACTIVE_STATE, BLOCKED, CON_ID, INSTANCE_MODE, EDITION, FAMILY, DATABASE_TYPE from gv$instance"
 )
