@@ -7,7 +7,7 @@ ENV CGO_LDFLAGS="-L/usr/lib/oracle/18.5/client64/lib/ -lstdc++ -lclntsh"
 
 ADD orazabbix.sh /
 ADD . /root/go/src/orazabbix/
-ADD oci8.pc /usr/lib/oracle/18.5/client64/lib/
+ADD /client18/oci8.pc /usr/lib/oracle/18.5/client64/lib/
 
 WORKDIR /root/go/src/orazabbix/
 
@@ -39,6 +39,6 @@ COPY --from=build /orazabbix /
 
 ADD orazabbix.sh /
 
-ADD oci8.pc /usr/lib/oracle/18.5/client64/lib/
+ADD /client18/oci8.pc /usr/lib/oracle/18.5/client64/lib/
 
 CMD ["/orazabbix.sh"]
