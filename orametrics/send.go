@@ -1,8 +1,9 @@
 package orametrics
 
 import (
-	. "github.com/blacked/go-zabbix"
 	"time"
+
+	. "github.com/blacked/go-zabbix"
 )
 
 func send(zabbixData map[string]string, zabbixHost string, zabbixPort int, hostName string) {

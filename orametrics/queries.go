@@ -1,21 +1,21 @@
 package orametrics
 
 var queries = map[string]string{
-	"alive":                "select 1 from dual",
-	"archivelog_switch":    "select count(*) from gv$log_history where first_time >= (sysdate - 1 / 24)",
-	"uptime":               "select to_char ( (sysdate - startup_time) *24*60 , 'FM99999999999999990') from gv$instance",
-	"dbblockgets":          "select sum (value) from gv$sysstat where name = 'db block gets'",
-	"dbblockchanges":       "select sum (value) from gv$sysstat where name = 'db block changes'",
-	"dbconsistentgets":     "select sum (value) from gv$sysstat where name = 'consistent gets'",
-	"dbphysicalreads":      "select sum (value) from gv$sysstat where name = 'physical reads'",
-	"dbhitratio":           "select ( sum (case name when 'consistent gets' then value else 0 end) + sum (case name when 'db block gets' then value else 0 end) - sum (case name when 'physical reads' then value else 0 end)) / ( sum (case name when 'consistent gets' then value else 0 end) + sum (case name when 'db block gets' then value else 0 end)) * 100 from gv$sysstat",
-	"hitratio_body":        "select gethitratio * 100 from gv$librarycache where namespace = 'BODY'",
-	"hitratio_sqlarea":     "select gethitratio * 100 from gv$librarycache where namespace = 'SQL AREA'",
-	"hitratio_trigger":     "select gethitratio * 100 from gv$librarycache where namespace = 'TRIGGER'",
-	"hitratio_table_proc":  "select gethitratio * 100 from gv$librarycache where namespace = 'TABLE/PROCEDURE'",
-	"miss_latch":           "select sum (misses) from gv$latch",
-	"pga_aggregate_target": "select value from gv$pgastat where name = 'aggregate PGA target parameter'",
-	"pga": "select value from gv$pgastat where name = 'total PGA inuse'",
+	"alive":                  "select 1 from dual",
+	"archivelog_switch":      "select count(*) from gv$log_history where first_time >= (sysdate - 1 / 24)",
+	"uptime":                 "select to_char ( (sysdate - startup_time) *24*60 , 'FM99999999999999990') from gv$instance",
+	"dbblockgets":            "select sum (value) from gv$sysstat where name = 'db block gets'",
+	"dbblockchanges":         "select sum (value) from gv$sysstat where name = 'db block changes'",
+	"dbconsistentgets":       "select sum (value) from gv$sysstat where name = 'consistent gets'",
+	"dbphysicalreads":        "select sum (value) from gv$sysstat where name = 'physical reads'",
+	"dbhitratio":             "select ( sum (case name when 'consistent gets' then value else 0 end) + sum (case name when 'db block gets' then value else 0 end) - sum (case name when 'physical reads' then value else 0 end)) / ( sum (case name when 'consistent gets' then value else 0 end) + sum (case name when 'db block gets' then value else 0 end)) * 100 from gv$sysstat",
+	"hitratio_body":          "select gethitratio * 100 from gv$librarycache where namespace = 'BODY'",
+	"hitratio_sqlarea":       "select gethitratio * 100 from gv$librarycache where namespace = 'SQL AREA'",
+	"hitratio_trigger":       "select gethitratio * 100 from gv$librarycache where namespace = 'TRIGGER'",
+	"hitratio_table_proc":    "select gethitratio * 100 from gv$librarycache where namespace = 'TABLE/PROCEDURE'",
+	"miss_latch":             "select sum (misses) from gv$latch",
+	"pga_aggregate_target":   "select value from gv$pgastat where name = 'aggregate PGA target parameter'",
+	"pga":                    "select value from gv$pgastat where name = 'total PGA inuse'",
 	"phio_datafile_reads":    "select sum (value) from gv$sysstat where name = 'physical reads direct'",
 	"phio_datafile_writes":   "select sum (value) from gv$sysstat where name = 'physical writes direct'",
 	"phio_redo_writes":       "select sum (value) from gv$sysstat where name = 'redo writes'",
@@ -166,13 +166,13 @@ var queries = map[string]string{
 }
 var discoveryQueries = map[string]string{
 	"tablespaces": "select name ts from gv$tablespace",
-	"diskgroups" : "select name from v$asm_diskgroup",
-	"instances" : "select instance_name from gv$instance",
+	"diskgroups":  "select name from v$asm_diskgroup",
+	"instances":   "select instance_name from gv$instance",
 }
 
 var (
-	ts_usage_pct   string = "select tablespace_name ts, round(used_percent, 5) pct from dba_tablespace_usage_metrics"
-	ts_usage_bytes string = "select ta.tablespace_name as ts, ta.used_space * tb.block_size as bytes from dba_tablespace_usage_metrics ta join dba_tablespaces tb on ta.tablespace_name = tb.tablespace_name"
-	diskgroup_metrics string = "select name as Dg,USABLE_FILE_MB as UsableFileMB, OFFLINE_DISKS as OfflineDisks from v$asm_diskgroup"
-	instance_metrics string = "select INST_ID, INSTANCE_NUMBER, INSTANCE_NAME, HOST_NAME, VERSION, STARTUP_TIME, STATUS, PARALLEL, THREAD# AS THREAD_NO, ARCHIVER, LOG_SWITCH_WAIT, LOGINS, SHUTDOWN_PENDING, DATABASE_STATUS, INSTANCE_ROLE, ACTIVE_STATE, BLOCKED, CON_ID, INSTANCE_MODE, EDITION, FAMILY, DATABASE_TYPE from gv$instance"
+	ts_usage_pct      string = "select tablespace_name ts, round(used_percent, 5) pct from dba_tablespace_usage_metrics"
+	ts_usage_bytes    string = "select ta.tablespace_name as ts, ta.used_space * tb.block_size as bytes from dba_tablespace_usage_metrics ta join dba_tablespaces tb on ta.tablespace_name = tb.tablespace_name"
+	diskgroup_metrics string = "select name as Dg,USABLE_FILE_MB as UsableFileMB, OFFLINE_DISKS as UsableFileMB from v$asm_diskgroup"
+	instance_metrics  string = "select INST_ID, INSTANCE_NUMBER, INSTANCE_NAME, HOST_NAME, VERSION, STARTUP_TIME, STATUS, PARALLEL, THREAD# AS THREAD_NO, ARCHIVER, LOG_SWITCH_WAIT, LOGINS, SHUTDOWN_PENDING, DATABASE_STATUS, INSTANCE_ROLE, ACTIVE_STATE, BLOCKED, CON_ID, INSTANCE_MODE, EDITION, FAMILY, DATABASE_TYPE from gv$instance"
 )

@@ -2,10 +2,11 @@ package orametrics
 
 import (
 	"database/sql"
-	_ "github.com/mattn/go-oci8"
-	"github.com/rs/zerolog/log"
 	"strconv"
 	"time"
+
+	_ "github.com/mattn/go-oci8"
+	"github.com/rs/zerolog/log"
 )
 
 type tsBytes struct {
@@ -105,7 +106,7 @@ func Init(connectionString string, zabbixHost string, zabbixPort int, hostName s
 		}
 		if k == "diskgroups" {
 			resultd := runDiscoveryQuery(v, db)
-			var fixd  = "{\"data\":["
+			var fixd = "{\"data\":["
 			countd := 1
 			lend := len(resultd)
 			for _, vd := range resultd {

@@ -5,3 +5,5 @@
 .idea/dictionaries
 .idea/libraries
 .idea/
+orcl_instant_client18.Dockerfile
+client18_oci8.pc
