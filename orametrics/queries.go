@@ -98,7 +98,7 @@ var queries = map[string]string{
 		           || event
 		           || chr(10)
 		           || lpad(' ', (level - 1) * 4)
-		           || 'SECONDS_IN_WAIT :  '
+				   || 'SECONDS_IN_WAIT :  '
 		           || seconds_in_wait
 		           || chr(10)
 		           || lpad(' ', (level - 1) * 4)
